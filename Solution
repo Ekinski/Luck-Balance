@@ -1,0 +1,70 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the luckBalance function below.
+    static int luckBalance(int k, int[][] contests) {
+        int answer = 0;
+        int luck = 0;
+        List<int> plus = new List<int>();
+        for ( int a = 0; a < contests.Length; a++){
+            if ( contests[a][1] == 0){
+                answer += contests[a][0];
+                luck++;
+            } else {
+                plus.Add(contests[a][0]);
+            }
+        }
+        plus.Sort();
+        int num = plus.Take(plus.Count).Sum();
+        if (plus.Count - k < 0){
+            return answer + num;
+        } else {
+            k = plus.Count - k; 
+        }
+        for ( int b = 0; b < plus.Count; b++){
+            if ( k > 0){
+                answer = answer - plus[b];
+                k--;
+            }  else {
+                answer = answer + plus[b];
+            }
+        }
+        return answer;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        string[] nk = Console.ReadLine().Split(' ');
+
+        int n = Convert.ToInt32(nk[0]);
+
+        int k = Convert.ToInt32(nk[1]);
+
+        int[][] contests = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            contests[i] = Array.ConvertAll(Console.ReadLine().Split(' '), contestsTemp => Convert.ToInt32(contestsTemp));
+        }
+
+        int result = luckBalance(k, contests);
+
+        textWriter.WriteLine(result);
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
